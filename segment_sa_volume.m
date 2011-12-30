@@ -4,7 +4,7 @@ con_output = [];
 MAHD_output = [];
 sca_ver_output = [];
 pre_path = 'dat\t2\';
-allfiles = dir([pre_path 's15c1.nii']);
+allfiles = dir([pre_path 's6c3_lcs_r27-1pt.nii']);
 
 % BEGIN PARAMETER SETUP
 %% Global
@@ -359,7 +359,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % use AE to find most anterior point
-[temp,ant_acr_sur_id] = max(surf_voxels(sca_acr_sur_id,1:3)*sca_az);
+[temp,ant_acr_sur_id] = max(surf_voxels(acr_sur_id,1:3)*sca_ax);
 if (size(ant_acr_sur_id,1) < 1)
     error('\n Most anterior acromial point not found!\n')
 end
