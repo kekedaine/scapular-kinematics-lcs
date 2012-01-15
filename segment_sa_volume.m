@@ -3,8 +3,8 @@ clc
 con_output = [];
 MAHD_output = [];
 sca_ver_output = [];
-pre_path = 'dat\t2\';
-allfiles = dir([pre_path 's6c3_lcs_r27-1pt.nii']);
+pre_path = 'dat\t1\';
+allfiles = dir([pre_path '*.nii']);
 
 % BEGIN PARAMETER SETUP
 %% Global
@@ -292,17 +292,20 @@ if (run_sca_ver_analysis == 1)
         cut_norm = null([sca_ay'; (pE - pA)]);
         
         % debug D,E
-        pD_cube = [pD; pD+[0 1 0]; pD+[1 0 0]; pD+[0 -1 0]; pD+[-1 0 0]];
-        pE_cube = [pE; pE+[0 1 0]; pE+[1 0 0]; pE+[0 -1 0]; pE+[-1 0 0]];
         figure(10)
         hold on
+        pD_cube = [pD; pD+[0 1 0]; pD+[1 0 0]; pD+[0 -1 0]; pD+[-1 0 0]];
         [t]=delaunay(pD_cube(:,1),pD_cube(:,2));
         trisurf(t,pD_cube(:,1),pD_cube(:,2),pD_cube(:,3),'facecolor',[1 0 0],'edgecolor',[0.8 0.8 0.8]); % pD is RED
         arrow3d(pA,pD,red,red);
-        hold on
+        pE_cube = [pE; pE+[0 1 0]; pE+[1 0 0]; pE+[0 -1 0]; pE+[-1 0 0]];
         [t]=delaunay(pE_cube(:,1),pE_cube(:,2));
         trisurf(t,pE_cube(:,1),pE_cube(:,2),pE_cube(:,3),'facecolor',[0 1 0],'edgecolor',[0.8 0.8 0.8]); % pE is GREEN
         arrow3d(pA,pE,green,green);
+        pF_cube = [pF; pF+[0 1 0]; pF+[1 0 0]; pF+[0 -1 0]; pF+[-1 0 0]];
+        [t]=delaunay(pF_cube(:,1),pF_cube(:,2));
+        trisurf(t,pF_cube(:,1),pF_cube(:,2),pF_cube(:,3),'facecolor',[0 1 0],'edgecolor',[0.8 0.8 0.8]); % pF is BLUE
+        arrow3d(pA,pF,blue,blue);
     end
 
     figure(10);
