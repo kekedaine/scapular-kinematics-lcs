@@ -272,6 +272,7 @@ if (run_sca_ver_analysis == 1)
         % y-axis is the line perpendicular to the plane formed by connecting points 14, 15 and 16
         VLCS(:,2) = null([(pTPI-pTPC); (pTPC-pSP)]);
         pF_sign = (pF - ver_or) * VLCS(:,2); if (pF_sign < 0);  VLCS(:,2) = - VLCS(:,2); end% #2 axis points F positive
+        VLCS(:,2) = VLCS(:,2) * input_sign_ver_y;% we also consider the input sign (if any)
         % x-axis is the line perpendicular to both z-axis and y-axis
         VLCS(:,1) = null([VLCS(:,2)'; VLCS(:,3)']);
         pF_sign = (pF - ver_or) * VLCS(:,1); if (pF_sign < 0);  VLCS(:,1) = - VLCS(:,1); end% #1 axis points F positive
