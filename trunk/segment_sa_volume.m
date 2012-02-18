@@ -3,8 +3,9 @@ clc
 con_output = [];
 MAHD_output = [];
 sca_ver_output = [];
+pos_ant_dist_output = [];
 pre_path = 'dat\t1\';
-allfiles = dir([pre_path '*.nii']);
+allfiles = dir([pre_path 's13c1.nii']);
 
 % BEGIN PARAMETER SETUP
 %% Global
@@ -365,11 +366,19 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % use AE to find most anterior point
-[temp,ant_acr_sur_id] = max(surf_voxels(acr_sur_id,1:3)*sca_ax);
+[dist_vox,ant_acr_sur_id] = max(surf_voxels(acr_sur_id,1:3)*sca_ax);
 if (size(ant_acr_sur_id,1) < 1)
     error('\n Most anterior acromial point not found!\n')
 end
 ant_acr_sur_id = ant_acr_sur_id(1);
+pPA = surf_voxels(pos_acr_sur_id,1:3)
+pAA = surf_voxels(ant_acr_sur_id,1:3)
+dist_mm = pdist([pPA; pAA],'euclidean') / (cvt_precision);
+pPA = round((pPA-1) ./ (scale_factor * cvt_precision) + 0.99);
+pAA = round((pAA-1) ./ (scale_factor * cvt_precision) + 0.99);
+% convert to coordinate system of drawing tool
+pPA = [os(1)-pPA(1) os(2)-pPA(2) pPA(3)-1];
+pAA = [os(1)-pAA(1) os(2)-pAA(2) pAA(3)-1];
 
 % debug ant and pos point
 if (render_con_output == 1)
@@ -749,6 +758,11 @@ end
         R,
     end
     
+    pos_ant_dist_output = [pos_ant_dist_output; [pPA(1),pPA(2),pPA(3),pAA(1),pAA(2),pAA(3),dist_mm]];
+    fprintf('Coordinate of most posterior acromial point: %.2f\t%.2f\t%.2f\t\n',pPA(1),pPA(2),pPA(3));
+    fprintf('Coordinate of most anterior acromial point: %.2f\t%.2f\t%.2f\t\n',pAA(1),pAA(2),pAA(3));
+    fprintf('Distance from most anterior to most posterior acromial point: %.2f\n',dist_mm);
+    
     % render outputs
     tic
     fprintf('\nRendering surfaces...\n');
@@ -854,3 +868,9 @@ if (run_sca_ver_analysis == 1)
        fprintf('%s\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t\n',allfiles(i).name,sca_ver_output(i,:)); 
     end
 end
+
+% print batch posterior - anterior analysis outputs
+    fprintf('\nmost posterior - anterior acromial point analysis Outputs\n');
+    for i=1:size(sca_ver_output,1)
+       fprintf('%s\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t\n',allfiles(i).name,pos_ant_dist_output(i,:)); 
+    end
