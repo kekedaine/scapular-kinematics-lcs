@@ -372,7 +372,7 @@ if (size(ant_acr_sur_id,1) < 1)
 end
 ant_acr_sur_id = ant_acr_sur_id(1);
 pPA = surf_voxels(pos_acr_sur_id,1:3)
-pAA = surf_voxels(ant_acr_sur_id,1:3)
+pAA = surf_voxels(acr_sur_id(ant_acr_sur_id),1:3)
 dist_mm = pdist([pPA; pAA],'euclidean') / (cvt_precision);
 pPA = round((pPA-1) ./ (scale_factor * cvt_precision) + 0.99)
 pAA = round((pAA-1) ./ (scale_factor * cvt_precision) + 0.99)
