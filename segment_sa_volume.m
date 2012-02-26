@@ -4,8 +4,8 @@ con_output = [];
 MAHD_output = [];
 sca_ver_output = [];
 pos_ant_dist_output = [];
-pre_path = 'dat\t1\';
-allfiles = dir([pre_path 's13c1.nii']);
+pre_path = 'dat\t3\';
+allfiles = dir([pre_path '*.nii']);
 
 % BEGIN PARAMETER SETUP
 %% Global
@@ -159,15 +159,15 @@ pos_acr_sur_id = pos_acr_sur_id(1);
 
 sca_sur_id = find(surf_voxels(:,4) == SC_ID);
 acr_sur_id = [find(surf_voxels(:,4) == AC_ID); pos_acr_sur_id];
-pos_acr_sur_id = size(acr_sur_id,1);
+pos_acr_acr_sur_id = size(acr_sur_id,1);
 
 sca_acr_sur_id = [acr_sur_id; sca_sur_id];
 [SAPCA,sc] = princomp(surf_voxels(sca_acr_sur_id,1:3));
 
-pos_SAPCA_Z = sc(pos_acr_sur_id,3);
+pos_SAPCA_Z = sc(pos_acr_acr_sur_id,3);
 
 % use PCA to find most anterior point
-% [temp,ant_acr_sur_id] = max(abs(sc(1:pos_acr_sur_id,3) - pos_SAPCA_Z));
+% [temp,ant_acr_sur_id] = max(abs(sc(1:pos_acr_acr_sur_id,3) - pos_SAPCA_Z));
 % if (size(ant_acr_sur_id,1) < 1)
 %     error('\n Most anterior acromial point not found!\n')
 % end
@@ -175,7 +175,7 @@ pos_SAPCA_Z = sc(pos_acr_sur_id,3);
 % 
 % % debug ant and pos point
 % if (render_con_output == 1)
-% [x y z] = bresenham_line3d(surf_voxels(acr_sur_id(ant_acr_sur_id),1:3), surf_voxels(acr_sur_id(pos_acr_sur_id),1:3),2);
+% [x y z] = bresenham_line3d(surf_voxels(acr_sur_id(ant_acr_sur_id),1:3), surf_voxels(acr_sur_id(pos_acr_acr_sur_id),1:3),2);
 % figure(10)
 % hold on
 % plot3(x,y,z);
@@ -374,23 +374,23 @@ ant_acr_sur_id = ant_acr_sur_id(1);
 pPA = surf_voxels(pos_acr_sur_id,1:3)
 pAA = surf_voxels(ant_acr_sur_id,1:3)
 dist_mm = pdist([pPA; pAA],'euclidean') / (cvt_precision);
-pPA = round((pPA-1) ./ (scale_factor * cvt_precision) + 0.99);
-pAA = round((pAA-1) ./ (scale_factor * cvt_precision) + 0.99);
+pPA = round((pPA-1) ./ (scale_factor * cvt_precision) + 0.99)
+pAA = round((pAA-1) ./ (scale_factor * cvt_precision) + 0.99)
 % convert to coordinate system of drawing tool
-pPA = [os(1)-pPA(1) os(2)-pPA(2) pPA(3)-1];
-pAA = [os(1)-pAA(1) os(2)-pAA(2) pAA(3)-1];
+pPA = [os(1)-pPA(1) os(2)-pPA(2) pPA(3)-1]
+pAA = [os(1)-pAA(1) os(2)-pAA(2) pAA(3)-1]
 
 % debug ant and pos point
 if (render_con_output == 1)
-[x y z] = bresenham_line3d(surf_voxels(acr_sur_id(ant_acr_sur_id),1:3), surf_voxels(acr_sur_id(pos_acr_sur_id),1:3),2);
+[x y z] = bresenham_line3d(surf_voxels(acr_sur_id(ant_acr_sur_id),1:3), surf_voxels(acr_sur_id(pos_acr_acr_sur_id),1:3),2);
 figure(10)
 hold on
 plot3(x,y,z);
 end
 
 % 1st cutting plane
-cut_point = (surf_voxels(acr_sur_id(pos_acr_sur_id),1:3) * acr_trim_rate + (1-acr_trim_rate) * surf_voxels(acr_sur_id(ant_acr_sur_id),1:3)); % this part is used for PCA
-cut_point_base = (surf_voxels(acr_sur_id(pos_acr_sur_id),1:3) * 0.334 + 0.666 * surf_voxels(acr_sur_id(ant_acr_sur_id),1:3)); % 1/3 from anterior
+cut_point = (surf_voxels(acr_sur_id(pos_acr_acr_sur_id),1:3) * acr_trim_rate + (1-acr_trim_rate) * surf_voxels(acr_sur_id(ant_acr_sur_id),1:3)); % this part is used for PCA
+cut_point_base = (surf_voxels(acr_sur_id(pos_acr_acr_sur_id),1:3) * 0.334 + 0.666 * surf_voxels(acr_sur_id(ant_acr_sur_id),1:3)); % 1/3 from anterior
 
 % debug cut_point1
 if (render_con_output == 1)
@@ -405,7 +405,7 @@ hold on
 trisurf(t,cut_point_base_cube(:,1),cut_point_base_cube(:,2),cut_point_base_cube(:,3),'facecolor',[0 1 0],'edgecolor',[0.8 0.8 0.8]);
 end
 
-d_pos = [surf_voxels(acr_sur_id(pos_acr_sur_id),1)-cut_point(1) surf_voxels(acr_sur_id(pos_acr_sur_id),2)-cut_point(2) surf_voxels(acr_sur_id(pos_acr_sur_id),3)-cut_point(3)] * SAPCA(:,3);
+d_pos = [surf_voxels(acr_sur_id(pos_acr_acr_sur_id),1)-cut_point(1) surf_voxels(acr_sur_id(pos_acr_acr_sur_id),2)-cut_point(2) surf_voxels(acr_sur_id(pos_acr_acr_sur_id),3)-cut_point(3)] * SAPCA(:,3);
 sign_pos = sign(d_pos);
 
 % mark the surface of trimmed acromion
