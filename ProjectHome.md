@@ -1,0 +1,1 @@
+scripts found in this messy project are those used for our on-going experiments with scapular kinematics, it may be useful for people with the same interest.
